@@ -1,0 +1,118 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block body %}
+<link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
+<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+
+<style>
+		[x-cloak] {
+			display: none;
+		}
+
+		[type="checkbox"] {
+			box-sizing: border-box;
+			padding: 0;
+		}
+
+		.form-checkbox,
+		.form-radio {
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			appearance: none;
+			-webkit-print-color-adjust: exact;
+			color-adjust: exact;
+			display: inline-block;
+			vertical-align: middle;
+			background-origin: border-box;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			flex-shrink: 0;
+			color: currentColor;
+			background-color: #fff;
+			border-color: #e2e8f0;
+			border-width: 1px;
+			height: 1.4em;
+			width: 1.4em;
+		}
+
+		.form-checkbox {
+			border-radius: 0.25rem;
+		}
+
+		.form-radio {
+			border-radius: 50%;
+		}
+
+		.form-checkbox:checked {
+			background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+			border-color: transparent;
+			background-color: currentColor;
+			background-size: 100% 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		
+		.form-radio:checked {
+			background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+			border-color: transparent;
+			background-color: currentColor;
+			background-size: 100% 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+        .fixed{
+            position:fixed;
+            z-index: 112;
+        }
+		img{
+			display:none;
+			vertical-align: middle;
+		}
+        
+	</style>
+
+
+        
+<body class="antialiased sans-serif bg-gray-200">
+	<div >
+		<div class="max-w-3xl mx-auto px-4 py-10">
+
+			<div>
+				<div class="bg-white rounded-lg p-10 flex items-center shadow justify-between">
+					<div>
+						<svg class="mb-4 h-20 w-20 text-green-500 mx-auto" viewBox="0 0 20 20" fill="currentColor">  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+
+						<h2 class="text-2xl mb-4 text-gray-800 text-center font-bold">Examination form Success</h2>
+
+						<div class="text-gray-600 mb-8">
+							Thank you. We have sent you an email to demo@demo.test. Please check. we will update regarding next process of examination.
+						</div>
+						{% if exam.status == 4 %}
+						<a href="/payment/"
+							class="w-40 block mx-auto focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-white-600 bg-info hover:bg-gray-100 font-medium border"  style="color:white"
+						>Payment</a>
+						{% endif %}
+
+						{% if exam.status == 5 %}
+						<a href="/invoice/"
+							class="w-40 block mx-auto focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-white-600 bg-success hover:bg-gray-100 font-medium border" style="color:white"
+						>Invoice</a>
+						{% endif %}
+
+					</div>
+				</div>
+			</div>
+
+			
+		</div>
+
+	
+	</div>
+
+	
+</body>
+{% endblock %}

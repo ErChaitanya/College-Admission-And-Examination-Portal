@@ -1,0 +1,63 @@
+
+{% extends 'index.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block body %}
+
+
+<div id="rs-team-2" class="rs-team-2 team-page sec-spacer">
+    <div class="container">
+        <h1 class="page-title">Examination Section of all Student
+            <a href="/examination-data/?type=table&status={{request.GET.status}}" class="btn btn-primary pull-right">Table View</a>
+        </h1>
+        <div class="gridFilter">
+            <button class="active" data-filter="*">ALL</button>
+            {% for i in branch %}
+            <button data-filter=".filter{{i.id}}">{{i.name}}</button>
+            {% endfor %}
+        </div>
+        <div class="row grid">
+            {% if examdata %}
+            {% for i in student %}
+            <div class="col-lg-3 col-md-6 col-xs-6 grid-item filter{{i.branch.id}}">
+                <div class="team-item">
+                    <div class="team-img">
+                        <a href="#"><img src="{% if i.student.student_set.all.0.image %}{{i.student.student_set.all.0.image.url}}{% endif %}" alt="" style="width:300px;height:300px" /></a>
+                        {% comment %} <div class="social-icon">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-google-plus"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                        </div> {% endcomment %}
+                    </div>
+                    <div class="team-body">
+                        <a href="/exam-data-detail/{{i.student.id}}/">
+                            <h3 class="name">{{i.student.first_name}} {{i.student.last_name}}</h3>
+                        </a>
+                        <span class="designation">{{i.branch}}</span>
+                    </div>
+                </div>
+            </div>
+            
+            {% endfor %}
+            
+            {% else %}
+            <h1>Data not found !</h1>
+            {% endif %}
+        </div>
+        <nav aria-label="Page navigation example">
+            {% comment %} <ul class="pagination">
+                <li class="page-item disabled"><a class="page-link fa fa-angle-left" href="#" tabindex="-1"></a></li>
+                <li class="page-item"><a class="page-link active" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link dotted" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                <li class="page-item"><a class="page-link" href="#">6</a></li>
+                <li class="page-item"><a class="page-link fa fa-angle-right" href="#"></a></li>
+            </ul> {% endcomment %}
+        </nav>
+    </div>
+</div>
+<!-- Team End -->
+{% include 'footer.html' %}
+{% endblock %}

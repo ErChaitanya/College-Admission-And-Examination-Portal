@@ -1,0 +1,60 @@
+{% include 'index.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block body %}
+
+   
+<div class="shop-cart mt-4">
+  <div class="container">
+    <div class="section-wrapper">
+        <h2 class="mb-2" align="center"> <u>Examination Section of all student</u>
+        </h2>
+      <div class="cart-top">
+        <table id="example" class="display nowrap" style="width: 100%">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Enrollment</th>
+              <th>Email</th>
+              <th>Contact</th>
+              <th>Branch</th>
+              <th>Semester</th>
+              <th>Address</th>
+              <th>Creation Date</th>
+              <th style="text-align: center">Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in student %}
+            <tr>
+              <td>{{i.id}}</td>
+              <td><img src="{% if i.student.student_set.all.0.image %}{{i.student.student_set.all.0.image.url}}{% endif %}" style="width:80px;height:80px"/></td>
+              <td>{{i.student.first_name}} {{i.student.last_name}}</td>
+              <td>{{i.student.student_set.all.0.roll_no}}</td>
+              <td>{{i.student.username}}</td>
+              <td>{{i.student.student_set.all.0.contact}}</td>
+              <td>{{i.branch.name}}</td>
+              <td>{{i.semester}}</td>
+              <td>{{i.student.student_set.all.0.city}}, {{i.student.student_set.all.0.state}}</td>
+              <td>{{i.student.student_set.all.0.created}}</td>
+              
+              <td>
+                    <a href="/exam-data-detail/{{i.student.id}}/" title="Detail" class="btn btn-info">
+                        <i class="fa fa-info"></i>
+                    </a>
+                    
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'tablecdn.html' %}
+{% include 'footer.html' %}
+
+{% endblock %}

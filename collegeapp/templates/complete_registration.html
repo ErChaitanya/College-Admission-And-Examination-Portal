@@ -1,0 +1,1272 @@
+
+{% extends 'index.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block body %}
+<link href="{% static 'form-progress.css' %}" rel="stylesheet"/>
+<style>
+  #display-image{
+  width: 200px;
+  height: 225px;
+  border: 1px solid black;
+  background-position: center;
+  background-size: cover;
+}
+
+#sign-image{
+  height:100%;
+  width: 100%;
+  border: 1px solid black;
+  background-position: center;
+  background-size: cover;
+}
+</style>
+
+<h1>Online Application</h1>
+<div id="output"></div>
+
+<div id="svg_wrap">
+
+</div>
+
+
+<section>
+    <form action="#" id="sectionform-0" method="post" enctype="multipart/form-data" style="text-align:left">
+            <h3>Personal Information</h3><hr>
+            <div class="row">
+              <div class="col-4">
+                {% personal_info request.user 'image' as myimage %}
+                {% if myimage %}
+                <img src="{{myimage.url}}" style="width:90%;max-height:200px">
+                {% else %}
+                <div align="center" id="display-image" style="border: 1px solid grey;height:200px;margin-top:30px;">
+                  passport-size image(120x120) 
+                </div>
+                {% endif %}
+              </div>
+              <div class="col-8">
+                <div class="row">
+                  <div class="col-6">
+                    <lable>First Name</lable>
+                    <input type="text" id="first_name" value="{% personal_info request.user 'first_name' %}" placeholder="First Name" />
+                  </div>
+                  <div class="col-6">
+                    <lable>Last Name</lable>
+                    <input type="text" id="last_name" value="{% personal_info request.user 'last_name' %}" placeholder="Last Name" />
+                  </div>
+                  <div class="col-6">
+                    <lable>Roll/Enrollment number</lable>
+                    <input type="text" id="roll_no"  value="{% personal_info request.user 'roll_no' %}" placeholder="Roll/Enrollment number" />
+                  </div>
+                  <div class="col-6">
+                    <lable>Contact</lable>
+                    <input type="text" id="contact" value="{% personal_info request.user 'contact' %}" placeholder="Contact" />
+                  </div>
+                  <div class="col-6">
+                    <lable>Gender</lable><br>
+                    <div class="form-check form-check-inline mt-1">
+                      {% personal_info request.user 'gender' as mygender %}
+                      <input class="form-check-input" type="radio" id="gender" id="inlineRadio1" style="width:15px;height:15px;padding:0" {% if mygender == "Male" %}checked{% endif %} value="Male">
+                      <label class="form-check-label" for="inlineRadio1">Male</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="gender" id="inlineRadio2" style="width:15px;height:15px;padding:0" {% if mygender == "Female" %}checked{% endif %} value="Female">
+                      <label class="form-check-label" for="inlineRadio2">Female</label>
+                    </div>
+                  </div>
+                  
+                  <div class="col-6">
+                    <lable>Image</lable>
+                    <input type="file" id="image" accept="image/jpeg, image/png, image/jpg"/>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-6">
+                <lable>Father's name</lable>
+                <input type="text" id="father_name" value="{% personal_info request.user 'father_name' %}" placeholder="Father's name" />
+              </div>
+
+              <div class="col-6">
+                <lable>Father's Occupation</lable>
+                <input type="text" id="father_occupation" value="{% personal_info request.user 'father_occupation' %}" placeholder="Father's Occupation" />
+              </div>
+
+              <div class="col-6">
+                <label>Mother's name</lable>
+                <input type="text" id="mother_name" value="{% personal_info request.user 'mother_name' %}" placeholder="Mother's name" />
+              </div>
+
+              <div class="col-6">
+                <label>Mother's Occupation</lable>
+                <input type="text" id="mother_occupation" value="{% personal_info request.user 'mother_occupation' %}" placeholder="Mother's Occupation" />
+              </div>
+
+              <div class="col-6">
+                <lable>Date of Birth</lable>
+                <input type="date" id="dob" value="{% personal_info request.user 'dob' %}">
+              </div>
+              <div class="col-6">
+                <lable>City</lable>
+                <input type="text" id="city" placeholder="City" value="{% personal_info request.user 'city' %}"/>
+              </div>
+            </div>
+            
+            
+            <lable>State</lable>
+            <input type="text" id="state" value="{% personal_info request.user 'state' %}" placeholder="State"/>
+            <lable>Aadhar number</lable>
+            <input type="text" id="aadhar_no" value="{% personal_info request.user 'aadhar_no' %}" placeholder="Aadhar number"/>
+            <lable>Nationality</lable>
+            <input type="text" id="nationality" value="{% personal_info request.user 'nationality' %}" placeholder="Nationality"/>
+        <input type="submit" id="sectionbtn-0" style="display:none" value="save">
+    </form>
+</section>
+
+<section>
+  <form action="#" method="post" id="sectionform-1" enctype="multipar/form-data" style="text-align:left">
+    {% csrf_token %}
+        <h3>Registration Information</h3><hr>
+        <div class="row">
+          <div class="col-6">
+            <lable>Admission Year</lable>
+            <input type="text" id="admissionyear" value="{% register_info request.user 'admissionyear' %}" placeholder="Admission Year" />
+          </div>
+
+          {% register_info request.user 'seat_type' as seattype %}
+          <div class="col-6">
+            <lable>Seat Type</lable>
+            <select id="seat_type" required>
+              <option value="1">Choose Seat Type</option>
+              {% for i in seat_type %}
+              <option value="{{i.0}}" {% if seattype == i.0 %}selected{% endif %}>{{i.1}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          {% register_info request.user 'branch' as branchdata %}
+          <div class="col-6">
+            <label>Branch</lable>
+            <select id="branch">
+              <option value="1">Choose Branch</option>
+              {% for i in branch %}
+              <option value="{{i.id}}" {% if branchdata.id == i.id %}selected{% endif %}>{{i.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+
+          {% register_info request.user 'semester' as semesterdata %}
+          <div class="col-6">
+            <label>Semester</lable>
+            <select id="semester">
+              <option value="1">Choose Semester</option>
+              {% for i in semester %}
+              <option value="{{i.id}}" {% if semesterdata.id == i.id %}selected{% endif %}>{{i.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          {% register_info request.user 'category' as categorydata %}
+          <div class="col-6">
+            <label>Category</lable>
+            <select id="category">
+              <option value="1">Choose Category</option>
+              {% for i in category %}
+              <option value="{{i.0}}" {% if categorydata == i.0 %}selected{% endif %}>{{i.1}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          
+          <div class="col-6">
+            <lable>CAP Application ID</lable>
+            <input type="text" id="cap_application_id" value="{% register_info request.user 'cap_application_id' %}"/>
+          </div>
+
+          {% register_info request.user 'residential_status' as residentialstatus %}
+          <div class="col-6">
+            <lable>Residential Status</lable>
+            <select id="residential_status">
+              <option value="1">Choose Residential Status</option>
+              {% for i in residential_status %}
+              <option value="{{i.0}}" {% if residentialstatus == i.0 %}selected{% endif %}>{{i.1}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          {% register_info request.user 'belong_to' as belongto %}
+          <div class="col-6">
+            <label>Belong To</lable>
+            <select id="belong_to">
+              <option value="1">Choose ..</option>
+              {% for i in belong_to %}
+              <option value="{{i.0}}" {% if belongto == i.0 %}selected{% endif %}>{{i.1}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          {% register_info request.user 'ftad' as ftaddata %}
+          <div class="col-6">
+            <label>FTAD</lable>
+            <select id="ftad">
+              <option value="1">Choose ..</option>
+              {% for i in ftad %}
+              <option value="{{i.0}}" {% if ftaddata == i.0 %}selected{% endif %}>{{i.1}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-6">
+            <label>Admission Date</lable>
+            <input type="date" id="admission_date" placeholder="Admission Date" value="{% register_info request.user 'admission_date' %}"/>
+          </div>
+
+          <div class="col-6">
+            <label>Session</lable>
+            <input type="text" id="session" placeholder="Session" value="{% register_info request.user 'session' %}"/>
+          </div>
+        </div>
+    <input type="submit" id="sectionbtn-1" style="display:none" value="save">
+</form>
+</section>
+
+<section>
+  <form action="#" method="post" id="sectionform-2" enctype="multipar/form-data" style="text-align:left">
+    {% csrf_token %}
+        <h3>Communication Address Detail Information</h3><hr>
+        <div class="row">
+          <div class="col-6">
+            <lable>Address</lable>
+            <textarea id="c_address" placeholder="Address">{% address_info request.user 'c_address' %}</textarea>
+          </div>
+
+          <div class="col-6">
+            <lable>City/Village</lable>
+            <input type="text" placeholder="City / Village" id="c_city_vill" value="{% address_info request.user 'c_city_vill' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Taluka</lable>
+            <input type="text" placeholder="Taluka" id="c_taluka" value="{% address_info request.user 'c_taluka' %}">
+          </div>
+
+          
+          <div class="col-6">
+            <lable>District</lable>
+            <input type="text" placeholder="Distric" id="c_district" value="{% address_info request.user 'c_district' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>State</lable>
+            <input type="text" placeholder="State" id="c_state" value="{% address_info request.user 'c_state' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Pincode</lable>
+            <input type="text" placeholder="Pincode" id="c_pincode" value="{% address_info request.user 'c_pincode' %}">
+          </div>
+
+          
+        </div>
+        <h3>Permananet Address Detail Information</h3><hr>
+        <div class="row">
+
+          <div class="col-6">
+            <lable>Address</lable>
+            <textarea id="p_address" placeholder="Address">{% address_info request.user 'p_address' %}</textarea>
+          </div>
+
+          <div class="col-6">
+            <lable>City/Village</lable>
+            <input type="text" placeholder="City / Village" id="p_city_vill" value="{% address_info request.user 'p_city_vill' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Taluka</lable>
+            <input type="text" placeholder="Taluka" id="p_taluka" value="{% address_info request.user 'p_taluka' %}">
+          </div>
+
+          
+          <div class="col-6">
+            <lable>District</lable>
+            <input type="text" placeholder="Distric" id="p_district" value="{% address_info request.user 'p_district' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>State</lable>
+            <input type="text" placeholder="State" id="p_state" value="{% address_info request.user 'p_state' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Pincode</lable>
+            <input type="text" placeholder="Pincode" id="p_pincode" value="{% address_info request.user 'p_pincode' %}">
+          </div>
+        </div>
+    <input type="submit" id="sectionbtn-2" style="display:none" value="save">
+</form>
+</section>
+
+<section>
+  <form action="#" method="post" id="sectionform-3" enctype="multipar/form-data" style="text-align:left">
+    {% csrf_token %}
+        <h3>Reservation Detail Information</h3><hr>
+        <div class="row">
+          
+          <div class="col-6">
+            <lable>Domicile State</lable>
+            <textarea id="domicile_state" placeholder="Domicile State">{% reservation_info request.user 'domicile_state' %}</textarea>
+          </div>
+
+          <div class="col-6">
+            <lable>Caste</lable>
+            <input type="text" placeholder="Caste" id="caste" value="{% reservation_info request.user 'caste' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Subcaste</lable>
+            <input type="text" placeholder="Subcaste" id="sub_caste" value="{% reservation_info request.user 'sub_caste' %}">
+          </div>
+
+          
+        </div>
+        
+    <input type="submit" id="sectionbtn-3" style="display:none" value="save">
+</form>
+</section>
+
+
+<section>
+  <form action="#" method="post" id="sectionform-4" enctype="multipar/form-data" style="text-align:left">
+    {% csrf_token %}
+        <h3>ScholarShip Detail Information</h3><hr>
+        <div class="row">
+          
+          <div class="col-6">
+            <lable>Type(ScholarShip/Freeship/Minority/EBC)</lable>
+            <textarea id="type" placeholder="Type">{% scholarship_info request.user 'type' %}</textarea>
+          </div>
+
+          <div class="col-6">
+            <lable>Previous year(ScholarShip/Freeship/Minority/EBC)</lable>
+            <input type="text" placeholder="Previous Year" id="previous_year" value="{% scholarship_info request.user 'previous_year' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Parent's Gurdian Profession</lable>
+            <input type="text" placeholder="Parent's Gurdian Profession" id="guardian_profession"  value="{% scholarship_info request.user 'guardian_profession' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Parent's Guardian Income</lable>
+            <input type="text" placeholder="Parent's Guardian Income" id="guardian_income" value="{% scholarship_info request.user 'guardian_income' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Bank Name</lable>
+            <input type="text" placeholder="Bank name" id="bank_name" value="{% scholarship_info request.user 'bank_name' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Branch</lable>
+            <input type="text" placeholder="Branch" id="branch_bank" value="{% scholarship_info request.user 'branch' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Account Number</lable>
+            <input type="text" placeholder="Account Number" id="ac_no" value="{% scholarship_info request.user 'ac_no' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>IFSC Code</lable>
+            <input type="text" placeholder="IFSC Code" id="ifsc" value="{% scholarship_info request.user 'ifsc' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>MICR Code</lable>
+            <input type="text" placeholder="MICR Code" id="micr_code" value="{% scholarship_info request.user 'micr_code' %}">
+          </div>
+        </div>
+        
+    <input type="submit" id="sectionbtn-4" style="display:none" value="save">
+</form>
+</section>
+
+
+<section>
+  <form action="#" method="post" id="sectionform-5" enctype="multipar/form-data" style="text-align:left">
+    {% csrf_token %}
+        <h3>Academic Detail Information
+          <button type="button" class="btn btn-primary pull-right" onclick="addform()">Add+</button>
+        </h3><hr>
+          
+          <table id="tabledata">
+            <tr>
+              <th>Class/Course</th>
+              <th>Board</th>
+              <th>Obtained Marks</th>
+              <th>Total Marks</th>
+              <th>Percentage</th>
+              <th>SGPA/CGPA</th>
+            <tr>
+            {% findacademic request.user 'all' as academic_data %}
+            {% for j in academic_data.0 %}
+            <tr id="tr-{{forloop.counter}}">
+              <td>
+                <input type="text" id="class-{{forloop.counter}}" value="{{j.class}}">
+              </td>
+              <td><input type="text" id="board-{{forloop.counter}}" value="{{j.board}}"></td>
+              <td><input type="text" id="marks-{{forloop.counter}}" value="{{j.marks}}"></td>
+              <td><input type="text" id="total-{{forloop.counter}}" value="{{j.total}}"></td>
+              <td><input type="text" id="percentage-{{forloop.counter}}" value="{{j.percentage}}"></td>
+              <td><input type="text" id="sgpa-{{forloop.counter}}" value="{{j.sgpa}}"></td>
+            <tr>
+            {% empty %}
+            <tr id="tr-1">
+              <td>
+                <input type="text" id="class-1">
+              </td>
+              <td><input type="text" id="board-1"></td>
+              <td><input type="text" id="marks-1"></td>
+              <td><input type="text" id="total-1"></td>
+              <td><input type="text" id="percentage-1"></td>
+              <td><input type="text" id="sgpa-1"></td>
+            <tr>
+            {% endfor %}
+          </table>
+
+          <input type="hidden" id="totalform" value="{% if academic_data.1 %}{{academic_data.1}}{% else %}1{% endif %}">
+        
+    <input type="submit" id="sectionbtn-5" style="display:none" value="save">
+</form>
+</section>
+
+<section>
+  <form action="#" method="post" id="sectionform-6" enctype="multipar/form-data" style="text-align:left">
+    {% csrf_token %}
+        <h3>Uploadfile Information
+          <button type="button" class="btn btn-primary pull-right" onclick="addformfile()">Add+</button>
+        </h3><hr>
+          
+          <table id="tabledata-file">
+            <tr>
+              <th>File Name</th>
+              <th>Select File</th>
+            <tr>
+            {% finduploadfile request.user 'all' as uploadfile_data %}
+            {% for j in uploadfile_data.0 %}
+            <tr id="tr-{{forloop.counter}}">
+              <td><input type="text" id="filename-{{forloop.counter}}" value="{{j.filename}}"></td>
+              <td>
+                <input type="file" id="certificate-{{forloop.counter}}">
+                <span>{{j.certificate}}</span>
+              </td>
+            <tr>
+            {% empty %}
+            <tr id="tr-1">
+              <td><input type="text" id="filename-1"></td>
+              <td><input type="file" id="certificate-1"></td>
+            <tr>
+            {% endfor %}
+          </table>
+
+          <input type="hidden" id="totalform-file" value="{% if uploadfile_data.1 %}{{uploadfile_data.1}}{% else %}1{% endif %}">
+        
+    <input type="submit" id="sectionbtn-6" style="display:none" value="save">
+</form>
+</section>
+
+
+
+<section>
+  <form action="#" method="post" id="sectionform-7" enctype="multipar/form-data" style="text-align:left">
+    {% csrf_token %}
+        <h3>Declaration Detail Information.</h3><hr>
+        <div class="row">
+          
+          <div class="col-6">
+            <lable>Date</lable>
+            <input type="date" id="date" value="{% declaration_info request.user 'date' %}"/>
+          </div>
+
+          <div class="col-6">
+            <lable>Place</lable>
+            <input type="text" placeholder="Place" id="place" value="{% declaration_info request.user 'place' %}">
+          </div>
+
+          <div class="col-6">
+            <lable>Upload Signature</lable>
+            <input type="file" placeholder="Signature" id="sign">
+          </div>
+
+
+          <div class="col-6">
+            {% declaration_info request.user 'sign' as signimage %}
+            {% if signimage %}
+            <img src="{{signimage.url}}" style="width:90%;max-height:200px">
+            {% else %}
+            <div align="center" id="sign-image" style="border: 1px solid grey;margin-top:30px;">
+              signature-size image(200x50) 
+            </div>
+            {% endif %}
+          </div>
+
+          
+        </div>
+
+        {% declaration_info request.user 'checked' as checked %}
+        <div style="white-space: nowrap">
+          <input type="checkbox"  id="checked"  {% if checked %}checked{% endif %}>
+          I am only resposible for what i fill above form all are correct.
+        </div>
+
+        
+    <input type="submit" id="sectionbtn-7" style="display:none" value="save">
+</form>
+</section>
+
+<section>
+  {% if comment %}
+  <div class="container">
+  <h3 class="skill-title">All Related Comment</h3>
+  <table class="table"> 
+      <tr>
+          <th>SN</th>
+          <th>Creation Date</th>
+          <th>Status</th>
+          <th>Comment</th>
+      </tr>
+      {% for i in comment %}
+      <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{i.created}}</td>
+          <td>{{i.get_status_display}}</td>
+          <td>{{i.comment}}</td>
+      </tr>
+      {% endfor %}
+  </table>
+
+            {% if admdata.status == 4 %}
+              <a href="/payment/?action=adm"
+                class="w-40 block mx-auto focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-white-600 bg-info hover:bg-gray-100 font-medium border"  style="color:white"
+              >Payment</a>
+						{% endif %}
+
+						{% if admdata.status == 5 %}
+              <a href="/invoice/?action=adm"
+                class="w-40 block mx-auto focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-white-600 bg-success hover:bg-gray-100 font-medium border" style="color:white"
+              >Invoice</a>
+						{% endif %}
+  </div>
+  {% else %}
+
+  <div class="container">
+    <h2>Thanks!</h2>
+    You have filled your all Information.
+    We will notify soon.
+  </div>
+
+  {% endif %}
+</section>
+
+<div class="button" id="prev">&larr; Previous</div>
+<div class="button" id="next">Save & Next &rarr;</div>
+<!-- <div class="button" id="submit">Agree and send application</div> -->
+
+
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<!-- jQuery easing plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript"></script>
+
+
+<script>
+  $('#svg_form_time circle').click(function (){
+    alert("hi");
+    child = this;
+    
+  })
+</script>
+
+<script>
+
+
+
+
+
+  var child = '{{childcount}}'*1;
+  length = 8 ;// all section length here
+
+  
+
+
+  function myprogress(child){
+    console.log(child, "All Value od child");
+      var base_color = "rgb(230,230,230)";
+      var active_color = "rgb(237, 40, 70)";
+      
+      if (child >= 2) {
+        $("#prev").removeClass("disabled");
+        $('#submit').addClass("disabled");
+      }
+
+
+      
+      //var child = 3;
+      var length = $("section").length - 1;
+      $("#prev").addClass("disabled");
+      $("#submit").addClass("disabled");
+
+      if (child >= 2) {
+        $("#prev").removeClass("disabled");
+        $('#submit').addClass("disabled");
+      }
+      
+      $("section").not("section:nth-of-type(1)").hide();
+      $("section").not("section:nth-of-type(1)").css('transform','translateX(100px)');
+      
+      var svgWidth = length * 200 + 24;
+      $("#svg_wrap").html(
+        '<svg version="1.1" id="svg_form_time" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  viewBox="0 0 ' +
+          svgWidth +
+          ' 24" xml:space="preserve"></svg>'
+      );
+      
+      function makeSVG(tag, attrs) {
+        var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        for (var k in attrs) el.setAttribute(k, attrs[k]);
+        return el;
+      }
+      
+      for (i = 0; i < length; i++) {
+        var positionX = 12 + i * 200;
+        var rect = makeSVG("rect", { x: positionX, y: 9, width: 200, height: 6 });
+        document.getElementById("svg_form_time").appendChild(rect);
+        // <g><rect x="12" y="9" width="200" height="6"></rect></g>'
+        var circle = makeSVG("circle", {
+          cx: positionX,
+          cy: 12,
+          r: 12,
+          width: positionX,
+          height: 6,
+          id: "circle-"+child
+        });
+        document.getElementById("svg_form_time").appendChild(circle);
+      }
+      
+      var circle = makeSVG("circle", {
+        cx: positionX + 200,
+        cy: 12,
+        r: 12,
+        width: positionX,
+        height: 6,
+        id: "circle-"+child
+      });
+      document.getElementById("svg_form_time").appendChild(circle);
+
+      function datasubmission(pid){
+         const form = document.getElementById(pid);
+         const formElements = Array.from(form.elements);
+          formElements.forEach(element => {
+            console.log(element);
+          });
+      }
+      
+      $('#svg_form_time rect').css('fill',base_color);
+      $('#svg_form_time circle').css('fill',base_color);
+      $("circle:nth-of-type(1)").css("fill", active_color);
+      
+      
+      $(".button").click(function () {
+        $("#svg_form_time rect").css("fill", active_color);
+        $("#svg_form_time circle").css("fill", active_color);
+        var id = $(this).attr("id");
+        if (id == "next") {
+
+          $('#sectionbtn-'+(child-1)).trigger('click');
+          //datasubmission('sectionbtn-'+(child-1))
+
+          $("#prev").removeClass("disabled");
+          if (child >= length) {
+            $(this).addClass("disabled");
+            $('#submit').removeClass("disabled");
+          }
+          if (child <= length) {
+            child++;
+          }
+        } else if (id == "prev") {
+          $("#next").removeClass("disabled");
+          $('#submit').addClass("disabled");
+          if (child <= 2) {
+            $(this).addClass("disabled");
+          }
+          if (child > 1) {
+            child--;
+          }
+        }
+        var circle_child = child + 1;
+        $("#svg_form_time rect:nth-of-type(n + " + child + ")").css(
+          "fill",
+          base_color
+        );
+        $("#svg_form_time circle:nth-of-type(n + " + circle_child + ")").css(
+          "fill",
+          base_color
+        );
+        var currentSection = $("section:nth-of-type(" + child + ")");
+        currentSection.fadeIn();
+        currentSection.css('transform','translateX(0)');
+       currentSection.prevAll('section').css('transform','translateX(-100px)');
+        currentSection.nextAll('section').css('transform','translateX(100px)');
+        $('section').not(currentSection).hide();
+      });
+
+      $("#svg_form_time rect").css("fill", active_color);
+      $("#svg_form_time circle").css("fill", active_color);
+      var circle_child = child + 1;
+        $("#svg_form_time rect:nth-of-type(n + " + child + ")").css(
+          "fill",
+          base_color
+        );
+        $("#svg_form_time circle:nth-of-type(n + " + circle_child + ")").css(
+          "fill",
+          base_color
+        );
+        var currentSection = $("section:nth-of-type(" + child + ")");
+        currentSection.fadeIn();
+        currentSection.css('transform','translateX(0)');
+       currentSection.prevAll('section').css('transform','translateX(-100px)');
+        currentSection.nextAll('section').css('transform','translateX(100px)');
+        $('section').not(currentSection).hide();
+      
+      }
+
+
+
+
+  $('#sectionform-0').unbind("click").on('submit', function(e){
+    formData = new FormData();
+    formData.append('roll_no' , $('#roll_no').val());
+    formData.append('contact' , $('#contact').val());
+    formData.append('gender' , $('#gender').val());
+    formData.append('state' , $('#state').val());
+    formData.append('city' , $('#city').val());
+    formData.append('father_name' , $('#father_name').val());
+    formData.append('mother_name', $('#mother_name').val());
+    formData.append('mother_occupation', $('#mother_occupation').val());
+    formData.append('father_occupation', $('#father_occupation').val());
+    formData.append('image', document.getElementById('image').files[0]);
+    formData.append('address', $('#address').val());
+    formData.append('dob', $('#dob').val());
+    formData.append('aadhar_no', $('#aadhar_no').val());
+    formData.append('enrollment_no', $('#enrollment_no').val());
+    formData.append('registration_no', $('#registration_no').val());
+    formData.append('nationality', $('#nationality').val());
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    e.preventDefault();
+    $.ajax({
+         type : "post", 
+         url: "{% url 'personal_info' %}",
+         data: formData,
+         processData: false,
+         contentType: false,
+         
+         success: function(data){
+            $('#output').html(data.msg);
+            child = data.child;
+            console.log(data.child, data.msg)
+            
+         },
+  
+        failure: function() {
+            
+        }
+  
+  
+     });
+});    
+</script>
+
+<script>
+  var child = '{{childcount}}'*1;
+  $('#sectionform-1').unbind("click").on('submit', function(e){
+  e.preventDefault();
+    $.ajax({
+         type : "post", 
+         url: "{% url 'register_info' %}",
+         data: {
+          admissionyear : $('#admissionyear').val(),
+          seat_type : $('#seat_type').val(),
+          branch : $('#branch').val(),
+          category : $('#category').val(),
+          cap_application_id : $('#cap_application_id').val(),
+          residential_status : $('#residential_status').val(),
+          belong_to : $('#belong_to').val(),
+          ftad : $('#ftad').val(),
+          admission_date : $('#admission_date').val(),
+          semester : $('#semester').val(),
+          session : $('#session').val(),
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          dataType: "json",
+         },
+         
+         success: function(data){
+            //data = JSON.stringify(data)
+            $('#output').html(data.msg);
+            child = data.child;
+            console.log(data.child, data.msg, data)
+            
+         },
+  
+        failure: function() {
+            
+        }
+     });
+    });    
+</script>
+
+
+
+<script>
+  var child = '{{childcount}}'*1;
+  $('#sectionform-2').unbind("click").on('submit', function(e){
+  e.preventDefault();
+    $.ajax({
+         type : "post", 
+         url: "{% url 'addreess_info' %}",
+         data: {
+          c_address : $('#c_address').val(),
+          c_city_vill : $('#c_city_vill').val(),
+          c_taluka : $('#c_taluka').val(),
+          c_district : $('#c_district').val(),
+          c_state : $('#c_state').val(),
+          c_pincode : $('#c_pincode').val(),
+          p_address : $('#p_address').val(),
+          p_city_vill : $('#p_city_vill').val(),
+          p_taluka : $('#p_taluka').val(),
+          p_district : $('#p_district').val(),
+          p_state : $('#p_state').val(),
+          p_pincode : $('#p_pincode').val(),
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          dataType: "json",
+         },
+         
+         success: function(data){
+            //data = JSON.stringify(data)
+            $('#output').html(data.msg);
+            child = data.child;
+            console.log(data.child, data.msg, data)
+            
+         },
+  
+        failure: function() {
+            
+        }
+     });
+    });    
+</script>
+
+
+<script>
+  var child = '{{childcount}}'*1;
+  $('#sectionform-3').unbind("click").on('submit', function(e){
+  e.preventDefault();
+    $.ajax({
+         type : "post", 
+         url: "{% url 'reservation_info' %}",
+         data: {
+          domicile_state : $('#domicile_state').val(),
+          caste : $('#caste').val(),
+          sub_caste : $('#sub_caste').val(),
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          dataType: "json",
+         },
+         
+         success: function(data){
+            //data = JSON.stringify(data)
+            $('#output').html(data.msg);
+            child = data.child;
+            console.log(data.child, data.msg, data)
+            
+         },
+  
+        failure: function() {
+            
+        }
+     });
+    });    
+</script>
+
+
+<script>
+  var child = '{{childcount}}'*1;
+  $('#sectionform-4').unbind("click").on('submit', function(e){
+  e.preventDefault();
+    $.ajax({
+         type : "post", 
+         url: "{% url 'scholarship_info' %}",
+         data: {
+          type : $('#type').val(),
+          previous_year : $('#previous_year').val(),
+          guardian_profession : $('#guardian_profession').val(),
+          guardian_income : $('#guardian_income').val(),
+          bank_name : $('#bank_name').val(),
+          branch : $('#branch_bank').val(),
+          ac_no : $('#ac_no').val(),
+          ifsc : $('#ifsc').val(),
+          micr_code : $('#micr_code').val(),
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          dataType: "json",
+         },
+         
+         success: function(data){
+            //data = JSON.stringify(data)
+            $('#output').html(data.msg);
+            child = data.child;
+            console.log(data.child, data.msg, data)
+            
+         },
+  
+        failure: function() {
+            
+        }
+     });
+    });    
+</script>
+
+
+
+<script>
+  var child = '{{childcount}}'*1;
+  
+  $('#sectionform-5').unbind("click").on('submit', function(e){
+    var totalrow = document.getElementById('totalform').value;
+    
+    mydict = {
+      totalform : $('#totalform').val(),
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      dataType: "json",
+    }
+  for(var i=1;i<=totalrow;i++){
+    mydict['class-'+i] = $('#class-'+i).val();
+    mydict['board-'+i] = $('#board-'+i).val();
+    mydict['marks-'+i] = $('#marks-'+i).val();
+    mydict['total-'+i] = $('#total-'+i).val();
+    mydict['sgpa-'+i] = $('#sgpa-'+i).val();
+    mydict['percentage-'+i] = $('#percentage-'+i).val();
+  }
+  console.log(mydict)
+  e.preventDefault();
+    $.ajax({
+         type : "post", 
+         url: "{% url 'academic_info' %}",
+         data: mydict,
+         
+         success: function(data){
+            //data = JSON.stringify(data)
+            $('#output').html(data.msg);
+            child = data.child;
+            console.log(data.child, data.msg, data)
+            
+         },
+  
+        failure: function() {
+            
+        }
+     });
+    });    
+</script>
+
+
+<script>
+  var child = '{{childcount}}'*1;
+  
+  $('#sectionform-6').unbind("click").on('submit', function(e){
+    var totalrow = document.getElementById('totalform-file').value;
+  
+  var formdata = new FormData();
+  formdata.append('totalform', totalrow);
+  formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+  for(var i=1;i<=totalrow;i++){
+    formdata.append('filename-'+i, $('#filename-'+i).val());
+    formdata.append('certificate-'+i, document.getElementById('certificate-'+i).files[0]);
+  }
+  console.log(formdata);
+  e.preventDefault();
+    $.ajax({
+         type : "post", 
+         url: "{% url 'uploadfile_info' %}",
+         data: formdata,
+         processData: false, 
+         contentType: false,
+         dataType: "json",
+         success: function(data){
+            $('#output').html(data.msg);
+            child = data.child;
+            console.log(data.child, data.msg, data);
+         },
+  
+        failure: function() {
+            
+        }
+     });
+    });    
+</script>
+
+
+
+<script>
+
+  var child = '{{childcount}}'*1;
+  $('#sectionform-7').unbind("submit").on('submit', function(e){
+    var formdata = new FormData();
+    formdata.append('date', $('#date').val());
+    formdata.append('place', $('#place').val());
+    formdata.append('sign', document.getElementById('sign').files[0]);
+    formdata.append('checked', true);
+    formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    e.preventDefault();
+      $.ajax({
+          type : "post", 
+          url: "{% url 'decalartion_info' %}",
+          data: formdata,
+          processData: false,
+          contentType: false,
+          
+          success: function(data){
+              $('#output').html(data.msg);
+              child = data.child;
+              console.log(data.child, data.msg, data)
+              
+          },
+    
+          failure: function() {
+              
+          }
+      });
+      });    
+</script>
+
+
+<script>
+  var child = '{{childcount}}'*1;
+    
+    $( document ).ready(function() {
+      console.log(child, "All Value od child");
+        var base_color = "rgb(230,230,230)";
+        var active_color = "rgb(237, 40, 70)";
+        if (child >= 2) {
+          $("#prev").removeClass("disabled");
+          $('#submit').addClass("disabled");
+        }
+        
+        
+        //var child = 3;
+        var length = $("section").length - 1;
+        $("#prev").addClass("disabled");
+        $("#submit").addClass("disabled");
+
+        if (child >= 2) {
+          $("#prev").removeClass("disabled");
+          $('#submit').addClass("disabled");
+        }
+        
+        $("section").not("section:nth-of-type(1)").hide();
+        $("section").not("section:nth-of-type(1)").css('transform','translateX(100px)');
+        
+        var svgWidth = length * 200 + 24;
+        $("#svg_wrap").html(
+          '<svg version="1.1" id="svg_form_time" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  viewBox="0 0 ' +
+            svgWidth +
+            ' 24" xml:space="preserve"></svg>'
+        );
+        
+        function makeSVG(tag, attrs) {
+          var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+          for (var k in attrs) el.setAttribute(k, attrs[k]);
+          return el;
+        }
+        
+        for (i = 0; i < length; i++) {
+          var positionX = 12 + i * 200;
+          var rect = makeSVG("rect", { x: positionX, y: 9, width: 200, height: 6 });
+          document.getElementById("svg_form_time").appendChild(rect);
+          // <g><rect x="12" y="9" width="200" height="6"></rect></g>'
+          var circle = makeSVG("circle", {
+            cx: positionX,
+            cy: 12,
+            r: 12,
+            width: positionX,
+            height: 6
+          });
+          document.getElementById("svg_form_time").appendChild(circle);
+        }
+        
+        var circle = makeSVG("circle", {
+          cx: positionX + 200,
+          cy: 12,
+          r: 12,
+          width: positionX,
+          height: 6
+        });
+        document.getElementById("svg_form_time").appendChild(circle);
+
+        function datasubmission(pid){
+           const form = document.getElementById(pid);
+           const formElements = Array.from(form.elements);
+            formElements.forEach(element => {
+              console.log(element);
+            });
+        }
+        
+        $('#svg_form_time rect').css('fill',base_color);
+        $('#svg_form_time circle').css('fill',base_color);
+        $("circle:nth-of-type(1)").css("fill", active_color);
+        
+        
+        $(".button").click(function () {
+          $("#svg_form_time rect").css("fill", active_color);
+          $("#svg_form_time circle").css("fill", active_color);
+          var id = $(this).attr("id");
+          if (id == "next") {
+
+            $('#sectionbtn-'+(child-1)).trigger('click');
+            //datasubmission('sectionbtn-'+(child-1))
+
+            $("#prev").removeClass("disabled");
+            if (child >= length) {
+              $(this).addClass("disabled");
+              $('#submit').removeClass("disabled");
+            }
+            if (child <= length) {
+              child++;
+            }
+          } else if (id == "prev") {
+            $("#next").removeClass("disabled");
+            $('#submit').addClass("disabled");
+            if (child <= 2) {
+              $(this).addClass("disabled");
+            }
+            if (child > 1) {
+              child--;
+            }
+          }
+          var circle_child = child + 1;
+          $("#svg_form_time rect:nth-of-type(n + " + child + ")").css(
+            "fill",
+            base_color
+          );
+          $("#svg_form_time circle:nth-of-type(n + " + circle_child + ")").css(
+            "fill",
+            base_color
+          );
+          var currentSection = $("section:nth-of-type(" + child + ")");
+          currentSection.fadeIn();
+          currentSection.css('transform','translateX(0)');
+         currentSection.prevAll('section').css('transform','translateX(-100px)');
+          currentSection.nextAll('section').css('transform','translateX(100px)');
+          $('section').not(currentSection).hide();
+        });
+
+        $("#svg_form_time rect").css("fill", active_color);
+        $("#svg_form_time circle").css("fill", active_color);
+        var circle_child = child + 1;
+          $("#svg_form_time rect:nth-of-type(n + " + child + ")").css(
+            "fill",
+            base_color
+          );
+          $("#svg_form_time circle:nth-of-type(n + " + circle_child + ")").css(
+            "fill",
+            base_color
+          );
+          var currentSection = $("section:nth-of-type(" + child + ")");
+          currentSection.fadeIn();
+          currentSection.css('transform','translateX(0)');
+         currentSection.prevAll('section').css('transform','translateX(-100px)');
+          currentSection.nextAll('section').css('transform','translateX(100px)');
+          $('section').not(currentSection).hide();
+        
+        });
+
+</script>
+
+<script>
+
+  function deleteRow(btn) {
+    var row = btn.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+  }
+
+  function addform(){
+    var totalrow = document.getElementById('totalform').value;
+    totalrow = (totalrow*1) + 1;
+    rowtable = totalrow + 2
+
+    row = document.getElementById('tabledata').insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
+    var cell6 = row.insertCell(5);
+    var cell7 = row.insertCell(6);
+    
+    
+    cell1.innerHTML =  `<td><input type="text" id="class-`+totalrow+`"></td>`
+    cell2.innerHTML =  `<td><input type="text" id="board-`+totalrow+`"></td>`
+    cell3.innerHTML =  `<td><input type="text" id="marks-`+totalrow+`"></td>`
+    cell4.innerHTML =  `<td><input type="text" id="total-`+totalrow+`"></td>`
+    cell5.innerHTML =  `<td><input type="text" id="percentage-`+totalrow+`"></td>`
+    cell6.innerHTML =  `<td><input type="text" id="sgpa-`+totalrow+`"></td>`
+    cell7.innerHTML =  `<td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">-</button></td>`
+    
+    document.getElementById('totalform').value = totalrow;
+  }
+
+  function addformfile(){
+    var totalrow = document.getElementById('totalform-file').value;
+    totalrow = (totalrow * 1) + 1;
+    rowtable = totalrow + 2
+
+    row = document.getElementById('tabledata-file').insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    
+    
+    cell1.innerHTML =  `<td><input type="text" id="filename-`+totalrow+`"></td>`
+    cell2.innerHTML =  `<td><input type="file" id="certificate-`+totalrow+`"></td>`
+    cell3.innerHTML =  `<td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">-</button></td>`
+    
+    document.getElementById('totalform-file').value = totalrow;
+  }
+
+  
+</script>
+<script>
+  const image_input = document.querySelector("#image");
+  image_input.addEventListener("change", function() {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      const uploaded_image = reader.result;
+      document.querySelector("#display-image").style.backgroundImage = `url(${uploaded_image})`;
+    });
+    document.getElementById('display-image').innerHTML = "";
+    reader.readAsDataURL(this.files[0]);
+  });
+
+
+  const image_sign = document.querySelector("#sign");
+  image_sign.addEventListener("change", function() {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      const uploaded_image = reader.result;
+      document.querySelector("#sign-image").style.backgroundImage = `url(${uploaded_image})`;
+    });
+    document.getElementById('sign-image').innerHTML = "";
+    reader.readAsDataURL(this.files[0]);
+  });
+</script>
+{% endblock %}

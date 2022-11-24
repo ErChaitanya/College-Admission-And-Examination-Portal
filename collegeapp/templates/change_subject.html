@@ -1,0 +1,150 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block body %}
+<link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
+<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+
+<style>
+		[x-cloak] {
+			display: none;
+		}
+
+		[type="checkbox"] {
+			box-sizing: border-box;
+			padding: 0;
+		}
+
+		.form-checkbox,
+		.form-radio {
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			appearance: none;
+			-webkit-print-color-adjust: exact;
+			color-adjust: exact;
+			display: inline-block;
+			vertical-align: middle;
+			background-origin: border-box;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			flex-shrink: 0;
+			color: currentColor;
+			background-color: #fff;
+			border-color: #e2e8f0;
+			border-width: 1px;
+			height: 1.4em;
+			width: 1.4em;
+		}
+
+		.form-checkbox {
+			border-radius: 0.25rem;
+		}
+
+		.form-radio {
+			border-radius: 50%;
+		}
+
+		.form-checkbox:checked {
+			background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+			border-color: transparent;
+			background-color: currentColor;
+			background-size: 100% 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+		
+		.form-radio:checked {
+			background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+			border-color: transparent;
+			background-color: currentColor;
+			background-size: 100% 100%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+        .fixed{
+            position:fixed;
+            z-index: 112;
+        }
+
+        h1{
+            margin-top:2%;
+            margin-bottom:2%;
+            font-size:40px;
+            font-weight:bold;
+            color:white;
+        }
+        
+	</style>
+
+<div class="container bg-dark p-3 my-5" style="border-radius:6px">
+    <h1>{% if not subject %}Add{% else %}Change{% endif %} Subject</h1><hr style="color:white">
+    <form action="{% if not subject %}/add-subject/{% else %}/change-subject/{{subject.id}}/{% endif %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-5">
+                <label for="branch" class="font-bold mb-1 text-gray-700 block" style="color:white">Branch</label>
+                <select class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium" name="branch">
+                    <option value="">select branch</option>
+                    {% for i in branch %}
+                    <option value="{{i.id}}" {% if i.id == subject.branch.id %}selected{% endif %}>{{i.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6 mb-5">
+                <label for="semester" class="font-bold mb-1 text-gray-700 block" style="color:white">Semester</label>
+                <select class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium" name="semester">
+                    <option value="">select semester</option>
+                    {% for i in semester %}
+                    <option value="{{i.id}}" {% if i.id == subject.semester.id %}selected{% endif %}>{{i.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                <label for="email" class="font-bold mb-1 text-gray-700 block" style="color:white">Subject Name</label>
+                <input type="text"
+                    class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                    name="name" placeholder="Enter Subject Name" value="{{subject.name}}">
+            </div>
+            <div class="col-md-4 mb-5">
+                <label for="email" class="font-bold mb-1 text-gray-700 block" style="color:white">Subject Code</label>
+                <input type="text"
+                    class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                    name="code" placeholder="Enter Subject Code" value="{{subject.code}}">
+            </div>
+            <div class="col-md-4 mb-5">
+                <label for="email" class="font-bold mb-1 text-gray-700 block" style="color:white">Subject Marks</label>
+                <input type="text"
+                    class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                    name="marks" placeholder="Enter marks" value="{{subject.marks}}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-5">
+                <label for="email" class="font-bold mb-1 text-gray-700 block" style="color:white">Subject Type(Core/Optional)</label>
+                <select class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium" name="subjecttype">
+                    <option value="">Select Core/Optional</option>
+                    {% for i in subjecttype %}
+                    <option value="{{i.0}}" {% if i.0 == subject.subjecttype %}selected{% endif %}>{{i.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-5">
+                <label for="email" class="font-bold mb-1 text-gray-700 block" style="color:white">Subject Type(Theory/Practical)</label>
+                <select class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium" name="theroytype">
+                    <option value="">Select Theory/Practical</option>
+                    {% for i in theroytype %}
+                    <option value="{{i.0}}" {% if i.0 == subject.theroytype %}selected{% endif %}>{{i.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <input type="submit" class="btn btn-primary mb-5" value="submit"/>
+</div>
+
+{% endblock %}

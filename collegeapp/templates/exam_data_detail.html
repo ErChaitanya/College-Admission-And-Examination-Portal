@@ -1,0 +1,268 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block body %} 
+                    
+<div class="rs-team-single pt-100">
+    <div class="container">
+        <h1 class="page-title">Exam Detail of {{student.user.first_name}} {{student.user.last_name}} ({{student.roll_no}})</h1>
+        <div class="row team table-responsive">
+            <div class="col-lg-4 col-md-12">
+                <div class="team-photo mobile-mb-40">
+                    <img src="{% if student.image %}{{student.image.url}}{% endif %}" alt="Team1" style="width:300px;height:300px">
+                    <div class="team-icons">
+                        <a href="#" title="facebook">
+                                <i class="fa fa-facebook"></i>
+                            </a>
+                        <a href="#" title="twitter">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        <a href="#" title="google plus">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        <a href="#" title="linkedin">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="gridFilter">
+                    
+                    <button data-filter="*" class="active">All Detail</button>
+                    <button data-filter=".filter1">Student Profile</button>
+                    <button data-filter=".filter2">Registration & Course</button>
+                    <button data-filter=".filter3">Required Documents</button>
+                    <button data-filter=".filter4">Approval Form</button>
+                    
+                </div>
+                <div class="row grid">
+
+
+                    {% comment %} personale Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter1">
+                        <div class="team-item">
+                            <h3 class="team-name">{{student.user.first_name}} {{student.user.last_name}}</h3>
+                            <p class="team-title">
+                                {{student.enrollment_no}} 
+                            </p>
+
+                            <p class="team-contact">
+                                <i class="fa fa-mobile"></i> {{student.contact}} <i class="ml-15 fa fa-envelope-o"></i> {{student.user.username}}
+                            </p>
+                            
+                            <div class="team-skill">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table"> 
+                                            <tr>
+                                                <th>Father's Name</th>
+                                                <td>{{student.father_name}}</td>
+                                                <th>Date of birth</th>
+                                                <td>{{student.dob}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2">Correspondance Address</th>
+                                                <td colspan="2">{{address.c_address}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} End of personnel Detail {% endcomment %}
+
+                    {% comment %} Start Registartion & Course Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter2">
+                        <div class="team-skill">
+                            <h3 class="skill-title">Registartion & Course Detail</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>Session</th>
+                                            <td>{{register.session}}</td>
+                                            <th></th>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Branch (Programme(UG/PG))</th>
+                                            <td>{{register.branch}}</td>
+                                            <th>Semester</th>
+                                            <td>{{register.semester}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Name of Examination</th>
+                                            <td>Final Exam</td>
+                                            <th>Student Type</th>
+                                            <td>{{data.student_type}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Registration Number</th>
+                                            <td>{{student.registration_no}}</td>
+                                            <th>Enrollment Number</th>
+                                            <td>{{student.enrollment_no}}</td>
+                                        </tr>
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="team-skill">
+                            <h3 class="skill-title">Course Detail</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>SN</th>
+                                            <th>SubjectCode</th>
+                                            <th>SubjectName</th>
+                                            <th>Theory/Practical</th>
+                                            <th>Marks</th>
+                                        </tr>
+
+                                        {% for j in course %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{% findsubject j.subject 'code' %}</td>
+                                            <td>{% findsubject j.subject 'name' %}</td>
+                                            <td>{% findsubject j.subject 'theroytype' %}</td>
+                                            <td>{% findsubject j.subject 'marks' %}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} End Registartion & Course Detail {% endcomment %}
+
+
+                    {% comment %} Start Required Documents Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter3">
+                        <div class="team-skill">
+                            <h3 class="skill-title">Required Documents</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>Semester</th>
+                                            <th>Examination</th>
+                                            <th>Total Credit</th>
+                                            <th>Result(Pass/Fail)</th>
+                                            <th>SGPA</th>
+                                            <th>Upload</th>
+                                        <tr>
+                                        {% for j in info %}
+                                        <tr>
+                                            <td>{{j.semester}}</td>
+                                            <td>{{j.exam}}</td>
+                                            <td>{{j.credit}}</td>
+                                            <td>{{j.result}}</td>
+                                            <td>{{j.sgpa}}</td>
+                                            <td>
+                                                <a href="" class="btn btn-primary" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} End Required document Detail {% endcomment %}
+                    
+                    {% comment %} Start Thanks Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter4">
+                        <h3 class="skill-title">Approved Form</h3>
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <label>Status</label>
+                            <select class="form-select" name="status" required>
+                                <option value="">Select Status</option>
+                                {% for i in admstatus %}
+                                <option value="{{i.0}}">{{i.1}}</option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Write Comment</label>
+                            <textarea class="form-control" name="comment" placeholder="Write Comment" required></textarea>
+                            <br>
+                            <input type="submit" value="save" class="btn btn-success pull-right">
+                        </form><br>
+                        <h3 class="skill-title">All Related Comment</h3>
+                        <table class="table"> 
+                            <tr>
+                                <th>Creation Date</th>
+                                <td>Status</td>
+                                <td>Comment</td>
+                            </tr>
+                            {% for i in approveco %}
+                            <tr>
+                                <td>{{i.created}}</td>
+                                <td>{{i.get_status_display}}</td>
+                                <td>{{i.comment}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    {% comment %} End Thanks Detail {% endcomment %}
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Team Single End -->
+
+<!-- Team Start -->
+<div id="rs-team-2" class="rs-team-2 pt-70 pb-70">
+    <div class="container">
+        <div class="sec-title-2 mb-50">
+            <h2>REALATED Students</h2>
+            <p>Fusce sem dolor, interdum in fficitur at, faucibus nec lorem.</p>
+        </div>
+        <div class="row">
+            {% for i in studentall %}
+            <div class="col-lg-3 col-md-6">
+                <div class="team-item">
+                    <div class="team-img">
+                        <a href="#"><img src="{% if i.image %}{{i.image.url}}{% endif %}" alt="" style="width:300px;height:300px" /></a>
+                        <div class="social-icon">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-google-plus"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                    <div class="team-body">
+                        <h3 class="name">{{i.user.first_name}} {{i.user.last_name}}</h3>
+                        <span class="designation">{{i.branch}}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Team End -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    var lendata = '{{lendata}}';
+    
+    $(document).ready(function(){
+        document.getElementsByClassName('grid')[0].style.height = '575px';
+        for(var i=2;i<=lendata*1;i++){
+            document.getElementsByClassName('filter'+i)[0].style.display = 'none';
+        }
+    })
+</script>
+{% include 'footer.html' %}
+{% endblock %}

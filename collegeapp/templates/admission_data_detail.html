@@ -1,0 +1,452 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block body %} 
+                    
+<div class="rs-team-single pt-100">
+    <div class="container">
+        <h1 class="page-title">Admission detail of {{student.user.first_name}} {{student.user.last_name}} ({{student.roll_no}})</h1>
+        <div class="row team">
+            <div class="col-lg-4 col-md-12">
+                <div class="team-photo mobile-mb-40">
+                    <img src="{% if student.image %}{{student.image.url}}{% endif %}" alt="Team1" style="height:400px;width:100%">
+                    {% comment %} <div class="team-icons">
+                        <a href="#" title="facebook">
+                                <i class="fa fa-facebook"></i>
+                            </a>
+                        <a href="#" title="twitter">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        <a href="#" title="google plus">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        <a href="#" title="linkedin">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                    </div> {% endcomment %}
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="gridFilter">
+                    {% for i in adstatus %}
+                    <button data-filter=".filter{{i.0}}" class="{% if forloop.counter == 1 %}active{% endif %}">{{i.1}}</button>
+                    {% endfor %}
+                </div>
+                <div class="row grid">
+
+
+                    {% comment %} personale Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter1">
+                        <div class="team-item">
+                            <h3 class="team-name">{{student.user.first_name}} {{student.user.last_name}}</h3>
+                            <p class="team-title">
+                                {{student.enrollment_no}} 
+                                {% comment %} <span>Registration Number {{student.registration_no}}</span> {% endcomment %}
+                            </p>
+
+                            <p class="team-contact">
+                                <i class="fa fa-mobile"></i> {{student.contact}} <i class="ml-15 fa fa-envelope-o"></i> {{student.user.username}}
+                            </p>
+                            
+                            <div class="team-skill">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table"> 
+                                            <tr>
+                                                <th>Father's Name</th>
+                                                <td>{{student.father_name}}</td>
+                                                <th>Father's Occupation</th>
+                                                <td>{{student.father_occupation}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Mother's Name</th>
+                                                <td>{{student.mother_name}}</td>
+                                                <th>Mother's Occupation</th>
+                                                <td>{{student.mother_occupation}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>City</th>
+                                                <td>{{student.city}}</td>
+                                                <th>State</th>
+                                                <td>{{student.state}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Date of birth</th>
+                                                <td>{{student.dob}}</td>
+                                                <th>Aadhar Number</th>
+                                                <td>{{student.aadhar_no}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nationality</th>
+                                                <td>{{student.nationality}}</td>
+                                                <th>Gender</th>
+                                                <td>{{student.gender}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} End of personnel Detail {% endcomment %}
+
+                    {% comment %} Start Registration Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter2">
+                        <div class="team-skill">
+                            <h3 class="skill-title">Registartion Detail</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>Session</th>
+                                            <td>{{register.session}}</td>
+                                            <th></th>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Branch</th>
+                                            <td>{{register.branch}}</td>
+                                            <th>Semester</th>
+                                            <td>{{register.semester}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Admission Year</th>
+                                            <td>{{register.admissionyear}}</td>
+                                            <th>Category</th>
+                                            <td>{{register.get_category_display}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Seat Type</th>
+                                            <td>{{register.get_seat_type_display}}</td>
+                                            <th>Residential Status</th>
+                                            <td>{{register.get_residential_status_display}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Belong To</th>
+                                            <td>{{register.get_belong_to_display}}</td>
+                                            <th>CAP Application ID</th>
+                                            <td>{{register.cap_application_id}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Admission Date</th>
+                                            <td>{{register.admission_date}}</td>
+                                            <th>FTAD</th>
+                                            <td>{{register.get_ftad_display}}</td>
+                                        </tr>
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} End Registration Detail {% endcomment %}
+
+
+                    {% comment %} Start Address Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter3">
+                        <div class="team-skill">
+                            <h3 class="skill-title">Communication Address Detail</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>Address</th>
+                                            <td>{{address.c_address}}</td>
+                                            <th>Pincode</th>
+                                            <td>{{address.c_pincode}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>City/Village</th>
+                                            <td>{{address.c_city_vill}}</td>
+                                            <th>Taluka</th>
+                                            <td>{{address.c_taluka}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>District</th>
+                                            <td>{{address.c_district}}</td>
+                                            <th>State</th>
+                                            <td>{{address.c_state}}</td>
+                                        </tr>
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                            <h3 class="skill-title">Permanent Address Detail</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>Address</th>
+                                            <td>{{address.p_address}}</td>
+                                            <th>Pincode</th>
+                                            <td>{{address.p_pincode}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>City/Village</th>
+                                            <td>{{address.p_city_vill}}</td>
+                                            <th>Taluka</th>
+                                            <td>{{address.p_taluka}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>District</th>
+                                            <td>{{address.p_district}}</td>
+                                            <th>State</th>
+                                            <td>{{address.p_state}}</td>
+                                        </tr>
+                                        
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} End Address Detail {% endcomment %}
+
+                    {% comment %} Start Reservation Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter4">
+                        <div class="team-skill">
+                            <h3 class="skill-title">Reservation Detail</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>Domicile State</th>
+                                            <td>{{reserve.domicile_state}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Caste</th>
+                                            <td>{{reserve.caste}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Sub-Caste</th>
+                                            <td>{{reserve.sub_caste}}</td>
+                                        </tr>
+                                        
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} End Reservation Detail {% endcomment %}
+
+
+                    {% comment %} Start Scholarship Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter5">
+                        <div class="team-skill">
+                            <h3 class="skill-title">Scholarship Detail</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>Scholarship Type</th>
+                                            <td>{{scholar.type}}</td>
+                                            <th>Previous Year</th>
+                                            <td>{{scholar.previous_year}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Guardian Profession</th>
+                                            <td>{{scholar.guardian_profession}}</td>
+                                            <th>Guardian Income</th>
+                                            <td>{{scholar.guardian_income}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Bank Name</th>
+                                            <td>{{scholar.bank_name}}</td>
+                                            <th>Account Number</th>
+                                            <td>{{scholar.ac_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>IFSC Code</th>
+                                            <td>{{scholar.ifsc}}</td>
+                                            <th>MICR Code</th>
+                                            <td>{{scholar.micr_code}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} End Scholarship Detail {% endcomment %}
+
+
+                    {% comment %} Start Academic Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter6">
+                        <h3 class="skill-title">Academic Detail</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>Class/Course</th>
+                                            <th>Board</th>
+                                            <th>Obtained MArks</th>
+                                            <th>Total Marks</th>
+                                            <th>Percentage</th>
+                                            <th>SGPA/CGPA</th>
+                                        </tr>
+
+                                        {% for j in academic %}
+                                        <tr>
+                                            <td>{{j.class}}</td>
+                                            <td>{{j.board}}</td>
+                                            <td>{{j.marks}}</td>
+                                            <td>{{j.total}}</td>
+                                            <td>{{j.percentage}}</td>
+                                            <td>{{j.sgpa}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                    </div>
+                    {% comment %} End Academic Detail {% endcomment %}
+
+                    {% comment %} Start upload file Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter7">
+                        <h3 class="skill-title">Upload Required Detail</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>File Name</th>
+                                            <th>View File</th>
+                                        
+                                        </tr>
+                                        {% finduploadfile student.user 'all' as uploadfieldata %}
+                                        {% for j in uploadfieldata.0 %}
+                                        <tr>
+                                            <td>{{j.filename}}</td>
+                                            <td><a href="http://127.0.0.1:8000/media/{{j.certificate}}" target="_blank">view</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                        
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                    </div>
+                    {% comment %} End upload file Detail {% endcomment %}
+
+                    {% comment %} Start Declaration Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter8">
+                        <h3 class="skill-title">Declaration Detail</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table"> 
+                                        <tr>
+                                            <th>Date</th>
+                                            <td>{{declare.date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Place</th>
+                                            <td>{{declare.place}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Signature</th>
+                                            <td><img src="{% if declare.sign %}{{declare.sign.url}}{% endif %}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Quote</th>
+                                            <td>I have decalare that all detail are correct, after verification if it caught wrong then I am only responsile for this.</td>
+                                        </tr>
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                    </div>
+                    {% comment %} End Declaration Detail {% endcomment %}
+
+
+                    {% comment %} Start Thanks Detail {% endcomment %}
+                    <div class="col-lg-12 col-md-12 col-xs-12 grid-item filter9">
+                        <h3 class="skill-title">Approved Form</h3>
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <label>Status</label>
+                            <select class="form-select" name="status" required>
+                                <option value="">Select Status</option>
+                                {% for i in admstatus %}
+                                <option value="{{i.0}}">{{i.1}}</option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Write Comment</label>
+                            <textarea class="form-control" name="comment" placeholder="Write Comment" required></textarea>
+                            <br>
+                            <input type="submit" value="save" class="btn btn-success pull-right">
+                        </form><br>
+                        <h3 class="skill-title">All Related Comment</h3>
+                        <table class="table"> 
+                            <tr>
+                                <th>Creation Date</th>
+                                <td>Status</td>
+                                <td>Comment</td>
+                            </tr>
+                            {% for i in approveco %}
+                            <tr>
+                                <td>{{i.created}}</td>
+                                <td>{{i.get_status_display}}</td>
+                                <td>{{i.comment}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    {% comment %} End Thanks Detail {% endcomment %}
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Team Single End -->
+
+<!-- Team Start -->
+<div id="rs-team-2" class="rs-team-2 pt-70 pb-70">
+    <div class="container">
+        <div class="sec-title-2 mb-50">
+            <h2>REALATED Students</h2>
+            <p>Fusce sem dolor, interdum in fficitur at, faucibus nec lorem.</p>
+        </div>
+        <div class="row">
+            {% for i in studentall %}
+            <div class="col-lg-3 col-md-6">
+                <div class="team-item">
+                    <a href="/admission-data-detail/{{i.user.id}}/">
+                    <div class="team-img">
+                        <img src="{% if i.image %}{{i.image.url}}{% endif %}" alt=""  style="width:300px;height:300px"/>
+                        <div class="social-icon">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-google-plus"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                    </a>
+                    <div class="team-body">
+                        <a href="/admission-data-detail/{{i.user.id}}/"><h3 class="name">{{i.user.first_name}} {{i.user.last_name}}</h3></a>
+                        <span class="designation">{{i.branch}}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Team End -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    var lendata = '{{lendata}}';
+    
+    $(document).ready(function(){
+        document.getElementsByClassName('grid')[0].style.height = '575px';
+        for(var i=2;i<=lendata*1;i++){
+            document.getElementsByClassName('filter'+i)[0].style.display = 'none';
+        }
+    })
+</script>
+{% include 'footer.html' %}
+{% endblock %}

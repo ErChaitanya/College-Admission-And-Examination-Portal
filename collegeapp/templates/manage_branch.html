@@ -1,0 +1,49 @@
+{% include 'index.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block body %}
+   
+<div class="shop-cart mt-4">
+  <div class="container">
+    <div class="section-wrapper">
+        <h2 class="mb-2" align="center"> <u>Manage Branch</u>
+        </h2>
+      <div class="cart-top">
+        <table id="example" class="display nowrap" style="width: 100%">
+          <thead>
+            <tr>
+              <th>Branch Id</th>
+              <th>Branch Name</th>
+              <th>Branch Code</th>
+              <th>Creation Date</th>
+              <th style="text-align: center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in branch %}
+            <tr>
+              <td>{{i.id}}</td>
+              <td>{{i.name}}</td>
+              <td>{{i.code}}</td>
+              <td>{{i.created}}</td>
+              
+              <td>
+                    <a href="/change-branch/{{i.id}}/" title="Edit Branch">
+                        <i class="fa fa-edit" style="font-size:18px;color:white;border-radius:50%;border:1px solid orange;padding:6px;padding-left:10px;padding-right:10px;background-color:orange"></i>
+                    </a>
+                    <a href="/delete-branch/{{i.id}}/" title="Delete Branch" onclick="return confirm('Are your sure?')">
+                        <i  class="fa fa-trash" style="font-size:18px;color:white;border-radius:50%;border:1px solid red;padding:6px;background-color:red"></i>
+                    </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'tablecdn.html' %}
+{% include 'footer.html' %}
+
+{% endblock %}
