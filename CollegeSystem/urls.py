@@ -63,3 +63,9 @@ urlpatterns = [
     path('sendotp/', checkotp, name='sendotp'),
     path('forgot-password/', forgot_password, name='forgot_password'),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+admin.site.site_header = "SBJain Admin Login"
+admin.site.site_title = "Admission and Examination System"
+admin.site.index_title = "Welcome to SBJain Admission and Examination Portal"
